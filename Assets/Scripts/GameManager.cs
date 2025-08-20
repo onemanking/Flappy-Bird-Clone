@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -10,8 +9,6 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Game Configs")]
     [SerializeField] private GameConfig m_gameConfig;
-
-    private EventBus eventBus;
 
     protected override void Awake()
     {
@@ -25,11 +22,10 @@ public class GameManager : Singleton<GameManager>
         InitEventBus();
 
         var playerObject = Instantiate(m_playerObjectPrefab, Vector3.zero, Quaternion.identity);
-        playerObject.SetupEventBus(eventBus);
+        playerObject.SetActive(false);
 
         CameraController.Instance.SetTarget(playerObject.transform);
         PlayerController.Instance.SetupControlObject(playerObject);
-        PlayerController.Instance.SetupEventBus(eventBus);
 
         UpdateGameState(GameState.Waiting);
     }
@@ -41,10 +37,9 @@ public class GameManager : Singleton<GameManager>
 
     private void InitEventBus()
     {
-        eventBus = new EventBus();
-        eventBus.OnPlayerInput += HandlePlayInputAction;
-        eventBus.OnPlayerOutOfBound += HandlePlayerOutOfBound;
-        eventBus.OnPlayerDied += HandlePlayerDied;
+        EventBus.OnPlayerInput += HandlePlayInputAction;
+        EventBus.OnPlayerOutOfBound += HandlePlayerOutOfBound;
+        EventBus.OnPlayerDied += HandlePlayerDied;
     }
 
     private void HandlePlayInputAction()
@@ -53,7 +48,6 @@ public class GameManager : Singleton<GameManager>
         {
             case GameState.Waiting:
                 UpdateGameState(GameState.Playing);
-                Debug.Log("Game Started");
                 break;
         }
     }
@@ -71,6 +65,6 @@ public class GameManager : Singleton<GameManager>
     private void UpdateGameState(GameState newState)
     {
         CurrentGameState = newState;
-        eventBus.RaiseGameStateChanged(newState);
+        EventBus.RaiseGameStateChanged(newState);
     }
 }

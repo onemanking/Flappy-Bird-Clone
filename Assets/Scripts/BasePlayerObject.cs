@@ -1,22 +1,26 @@
 using System;
 using UnityEngine;
 
-public abstract class BasePlayerObject : BaseObject, IEventBus
+public abstract class BasePlayerObject : BaseObject
 {
     [Header("Base Properties")]
     [SerializeField] protected BasePlayerObjectConfig Config;
 
     protected bool IsActive;
 
-    public EventBus EventBus { get; private set; }
-
     #region Abstract Methods
     protected abstract void CheckBoundary();
     internal abstract void InputAction();
     #endregion
 
-
     #region Override Methods
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        EventBus.GameStateChanged += OnGameStateChanged;
+    }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
@@ -47,7 +51,7 @@ public abstract class BasePlayerObject : BaseObject, IEventBus
         EventBus.RaisePlayerOutOfBound();
     }
 
-    protected virtual void SetActive(bool active)
+    internal virtual void SetActive(bool active)
     {
         IsActive = active;
 
@@ -79,12 +83,5 @@ public abstract class BasePlayerObject : BaseObject, IEventBus
                 break;
         }
     }
-
     #endregion
-
-    public void SetupEventBus(EventBus eventBus)
-    {
-        EventBus = eventBus;
-        EventBus.GameStateChanged += OnGameStateChanged;
-    }
 }

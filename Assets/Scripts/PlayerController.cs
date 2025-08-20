@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class PlayerController : Singleton<PlayerController>, IEventBus
+public class PlayerController : Singleton<PlayerController>
 {
     private BasePlayerObject currentControlObject;
-
-    public EventBus EventBus { get; private set; }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            EventBus?.RaisePlayerInput();
+            EventBus.RaisePlayerInput();
             currentControlObject?.InputAction();
         }
     }
@@ -18,10 +16,5 @@ public class PlayerController : Singleton<PlayerController>, IEventBus
     internal void SetupControlObject(BasePlayerObject baseObject)
     {
         currentControlObject = baseObject;
-    }
-
-    public void SetupEventBus(EventBus eventBus)
-    {
-        EventBus = eventBus;
     }
 }

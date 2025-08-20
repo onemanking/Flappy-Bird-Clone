@@ -1,28 +1,27 @@
 using System;
 
-// TODO: CHANGE TO STATIC CLASS
-public class EventBus
+public static class EventBus
 {
-    internal event Action OnGameStart;
-    internal event Action OnGameOver;
-    internal event Action OnRestart;
+    internal static event Action OnGameStart;
+    internal static event Action OnGameOver;
+    internal static event Action OnRestart;
 
-    internal event Action<GameState> GameStateChanged;
+    internal static event Action<GameState> GameStateChanged;
 
-    internal event Action OnPlayerInput;
-    internal event Action OnPlayerOutOfBound;
-    internal event Action OnPlayerDied;
+    internal static event Action OnPlayerInput;
+    internal static event Action OnPlayerOutOfBound;
+    internal static event Action OnPlayerDied;
 
-    internal event Action<int> OnScoreChanged;
+    internal static event Action<int> OnScoreChanged;
 
-    internal void RaiseGameStart() => OnGameStart?.Invoke();
-    internal void RaiseGameOver() => OnGameOver?.Invoke();
-    internal void RaiseRestart() => OnRestart?.Invoke();
+    internal static void RaiseGameStart() => OnGameStart?.Invoke();
+    internal static void RaiseGameOver() => OnGameOver?.Invoke();
+    internal static void RaiseRestart() => OnRestart?.Invoke();
 
-    internal void RaisePlayerInput() => OnPlayerInput?.Invoke();
-    internal void RaisePlayerOutOfBound() => OnPlayerOutOfBound?.Invoke();
-    internal void RaisePlayerDied() => OnPlayerDied?.Invoke();
+    internal static void RaisePlayerInput() => OnPlayerInput?.Invoke();
+    internal static void RaisePlayerOutOfBound() => OnPlayerOutOfBound?.Invoke();
+    internal static void RaisePlayerDied() => OnPlayerDied?.Invoke();
 
-    internal void RaiseGameStateChanged(GameState newState) => GameStateChanged?.Invoke(newState);
-    internal void RaiseScoreChanged(int score) => OnScoreChanged?.Invoke(score);
+    internal static void RaiseGameStateChanged(GameState newState) => GameStateChanged?.Invoke(newState);
+    internal static void RaiseScoreChanged(int score) => OnScoreChanged?.Invoke(score);
 }
