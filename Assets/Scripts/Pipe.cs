@@ -2,10 +2,17 @@ using UnityEngine;
 
 public class Pipe : BaseObject
 {
-    [SerializeField] private PipeData pipeData;
-
-    protected override void Initialize()
+    internal void ExtendToSize(float value)
     {
-        base.Initialize();
+        var newSize = SpriteRenderer.size;
+        newSize.y = value;
+        SpriteRenderer.size = newSize;
+
+        if (Collider2D is BoxCollider2D boxCollider)
+        {
+            boxCollider.size = newSize;
+        }
     }
+
+    internal Bounds GetBounds() => SpriteRenderer.bounds;
 }

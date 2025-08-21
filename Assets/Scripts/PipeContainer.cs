@@ -1,0 +1,64 @@
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class PipeContainer : MonoBehaviour
+{
+    [SerializeField] private PipeContainerConfig m_config;
+    [SerializeField] private Pipe[] m_pipes;
+
+    private Pipe TopPipe => m_pipes.Length > 0 ? m_pipes[0] : null;
+    private Pipe BottomPipe => m_pipes.Length > 1 ? m_pipes[1] : null;
+
+    private void Start()
+    {
+        PositionPipes();
+    }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PositionPipes();
+        }
+    }
+#endif
+
+    private void PositionPipes()
+    {
+        if (m_pipes.Length < 2) return;
+
+        var cam = Camera.main;
+        var screenTop = cam.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
+        var screenBottom = cam.ViewportToWorldPoint(new Vector3(0, 0, 0)).y;
+
+        var topRandomHeight = Random.Range(m_config.MinTopPipeHeight, m_config.MaxTopPipeHeight);
+        var gapSize = Random.Range(m_config.MinGap, m_config.MaxGap);
+        var botPosY = screenBottom + m_config.BottomOffset;
+
+        if (TopPipe != null)
+        {
+            var topCenterY = screenTop - (topRandomHeight / 2);
+            TopPipe.transform.position = new Vector2(TopPipe.transform.position.x, topCenterY);
+            TopPipe.ExtendToSize(topRandomHeight);
+        }
+
+        if (TopPipe != null && BottomPipe != null)
+        {
+            var topBounds = TopPipe.GetBounds();
+            var topPipeEdgeY = topBounds.min.y - gapSize;
+
+            var totalDistance = Mathf.Max(1, topPipeEdgeY - botPosY);
+
+            var centerY = botPosY + (totalDistance / 2);
+            BottomPipe.transform.position = new Vector2(BottomPipe.transform.position.x, centerY);
+
+            BottomPipe.ExtendToSize(totalDistance);
+        }
+        else
+        {
+            TopPipe.gameObject.SetActive(false);
+            BottomPipe.gameObject.SetActive(false);
+        }
+    }
+}
