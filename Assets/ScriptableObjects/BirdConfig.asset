@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BirdConfig
   m_EditorClassIdentifier: 
   <Speed>k__BackingField: 5
-  <JumpForce>k__BackingField: 12
+  <JumpForce>k__BackingField: 9
   <GravityScale>k__BackingField: 4.5
   <TiltAngle>k__BackingField: 20
   <StartFallingVelocity>k__BackingField: -15

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PipeSpawnConfig
   m_EditorClassIdentifier: 
   <PipeContainerPrefab>k__BackingField: {fileID: 1158784967485813630, guid: 8c1761f5bb762414fad633ae3ca32249, type: 3}
-  <SpawnInterval>k__BackingField: 2
+  <SpawnInterval>k__BackingField: 1.5
