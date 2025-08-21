@@ -5,24 +5,18 @@ internal static class Utils
     internal static bool IsReachedBoundaryY(float botY, float topY)
     {
         var cam = Camera.main;
-        var camTr = cam.transform;
+        var screenTop = cam.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f)).y;
+        var screenBottom = cam.ViewportToWorldPoint(new Vector3(0.5f, 0f, 0f)).y;
 
-        var vertExtent = cam.orthographicSize;
-        var minY = camTr.position.y - vertExtent;
-        var maxY = camTr.position.y + vertExtent;
-
-        return topY <= minY || botY >= maxY;
+        return topY < screenBottom || botY >= screenTop;
     }
 
     internal static bool IsReachedBoundaryX(float minX, float maxX)
     {
         var cam = Camera.main;
-        var camTr = cam.transform;
+        var screenLeft = cam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0f)).x;
+        var screenRight = cam.ViewportToWorldPoint(new Vector3(1f, 0.5f, 0f)).x;
 
-        var horzExtent = cam.orthographicSize * cam.aspect;
-        var screenMinX = camTr.position.x - horzExtent;
-        var screenMaxX = camTr.position.x + horzExtent;
-
-        return maxX < screenMinX || minX > screenMaxX;
+        return maxX < screenLeft || minX > screenRight;
     }
 }
