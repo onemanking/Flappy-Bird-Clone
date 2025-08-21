@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -9,6 +10,11 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Game Configs")]
     [SerializeField] private GameConfig m_gameConfig;
+
+    [Header("Game UI")]
+    [SerializeField] private TextMeshProUGUI m_scoreText;
+
+    private int score = 0;
 
     protected override void Awake()
     {
@@ -40,6 +46,13 @@ public class GameManager : Singleton<GameManager>
         EventBus.OnPlayerInput += HandlePlayInputAction;
         EventBus.OnPlayerOutOfBound += HandlePlayerOutOfBound;
         EventBus.OnPlayerDied += HandlePlayerDied;
+        EventBus.OnScoreChanged += HandleScoreChanged;
+    }
+
+    private void HandleScoreChanged(int value)
+    {
+        score += value;
+        UpdateScoreText(score);
     }
 
     private void HandlePlayInputAction()
@@ -69,7 +82,7 @@ public class GameManager : Singleton<GameManager>
         switch (newState)
         {
             case GameState.Waiting:
-                EventBus.RaiseRestart();
+                HandleRestart();
                 break;
             case GameState.Playing:
                 EventBus.RaiseGameStart();
@@ -78,5 +91,17 @@ public class GameManager : Singleton<GameManager>
                 EventBus.RaiseGameOver();
                 break;
         }
+    }
+
+    private void HandleRestart()
+    {
+        EventBus.RaiseRestart();
+        score = 0;
+        UpdateScoreText(score);
+    }
+
+    private void UpdateScoreText(int score)
+    {
+        m_scoreText.text = score.ToString();
     }
 }

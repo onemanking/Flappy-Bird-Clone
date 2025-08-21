@@ -42,6 +42,15 @@ public abstract class BasePlayerObject : BaseObject
             EventBus.RaisePlayerDied();
         }
     }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("ScoringZone"))
+        {
+            EventBus.RaiseScoreChanged(1);
+        }
+    }
+
     #endregion
 
     #region Virtual Methods
