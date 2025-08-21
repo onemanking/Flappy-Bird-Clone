@@ -14,15 +14,21 @@ public class PipeContainer : MonoBehaviour
         PositionPipes();
     }
 
-#if UNITY_EDITOR
     private void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
             PositionPipes();
         }
-    }
 #endif
+
+        if (Utils.IsReachedBoundaryX(transform.position.x, true))
+        {
+            // TODO: IMPLEMENT POOLING SYSTEM
+            Destroy(gameObject);
+        }
+    }
 
     private void PositionPipes()
     {
