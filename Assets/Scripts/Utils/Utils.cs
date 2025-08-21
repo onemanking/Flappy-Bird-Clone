@@ -13,4 +13,16 @@ internal static class Utils
 
         return topY <= minY || botY >= maxY;
     }
+
+    internal static bool IsReachedBoundaryX(float minX, float maxX)
+    {
+        var cam = Camera.main;
+        var camTr = cam.transform;
+
+        var horzExtent = cam.orthographicSize * cam.aspect;
+        var screenMinX = camTr.position.x - horzExtent;
+        var screenMaxX = camTr.position.x + horzExtent;
+
+        return maxX < screenMinX || minX > screenMaxX;
+    }
 }
