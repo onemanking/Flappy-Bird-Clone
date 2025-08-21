@@ -23,7 +23,7 @@ public class PipeContainer : MonoBehaviour
         }
 #endif
 
-        if (Utils.IsReachedBoundaryX(transform.position.x, true))
+        if (Utils.IsReachedBoundaryX(TopPipe.GetBounds().max.x, true))
         {
             // TODO: IMPLEMENT POOLING SYSTEM
             Destroy(gameObject);
