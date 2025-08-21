@@ -5,6 +5,7 @@ public class PipeContainer : MonoBehaviour
 {
     [SerializeField] private PipeContainerConfig m_config;
     [SerializeField] private Pipe[] m_pipes;
+    [SerializeField] private Collider2D m_scoringZone;
 
     private Pipe TopPipe => m_pipes.Length > 0 ? m_pipes[0] : null;
     private Pipe BottomPipe => m_pipes.Length > 1 ? m_pipes[1] : null;
@@ -37,6 +38,8 @@ public class PipeContainer : MonoBehaviour
         var cam = Camera.main;
         var screenTop = cam.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
         var screenBottom = cam.ViewportToWorldPoint(new Vector3(0, 0, 0)).y;
+
+        m_scoringZone.transform.localScale = new Vector2(m_scoringZone.transform.localScale.x, screenTop - screenBottom);
 
         var topRandomHeight = Random.Range(m_config.MinTopPipeHeight, m_config.MaxTopPipeHeight);
         var gapSize = Random.Range(m_config.MinGap, m_config.MaxGap);
