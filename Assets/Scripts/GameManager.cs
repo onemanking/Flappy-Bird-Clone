@@ -66,5 +66,17 @@ public class GameManager : Singleton<GameManager>
     {
         CurrentGameState = newState;
         EventBus.RaiseGameStateChanged(newState);
+        switch (newState)
+        {
+            case GameState.Waiting:
+                EventBus.RaiseRestart();
+                break;
+            case GameState.Playing:
+                EventBus.RaiseGameStart();
+                break;
+            case GameState.GameOver:
+                EventBus.RaiseGameOver();
+                break;
+        }
     }
 }
