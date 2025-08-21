@@ -518,7 +518,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2430009999552745272, guid: e92a2001fde9481489daae207e430a68, type: 3}
       propertyPath: m_Name
-      value: GroundContainner
+      value: GroundContainer
       objectReference: {fileID: 0}
     - target: {fileID: 5756420538503346388, guid: e92a2001fde9481489daae207e430a68, type: 3}
       propertyPath: m_LocalPosition.x
