@@ -14,12 +14,25 @@ public abstract class BasePlayerObject : BaseObject
     #endregion
 
     #region Override Methods
-
     protected override void Awake()
     {
         base.Awake();
 
         EventBus.GameStateChanged += OnGameStateChanged;
+
+#if UNITY_EDITOR
+        Config.OnEditorValidate += Initialize;
+#endif
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+
+        if (Rb2D != null)
+        {
+            Rb2D.gravityScale = Config.GravityScale;
+        }
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -49,6 +62,15 @@ public abstract class BasePlayerObject : BaseObject
     protected virtual void OnOutOfBound()
     {
         EventBus.RaisePlayerOutOfBound();
+    }
+
+    protected virtual void OnDestroy()
+    {
+        EventBus.GameStateChanged -= OnGameStateChanged;
+
+#if UNITY_EDITOR
+        Config.OnEditorValidate -= Initialize;
+#endif
     }
 
     internal virtual void SetActive(bool active)

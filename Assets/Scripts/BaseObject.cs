@@ -14,9 +14,9 @@ public abstract class BaseObject : MonoBehaviour
 
     protected virtual void Initialize()
     {
-        Rb2D = GetComponent<Rigidbody2D>();
-        Collider2D = GetComponent<Collider2D>();
-        SpriteRenderer = GetComponent<SpriteRenderer>();
+        Rb2D ??= GetComponent<Rigidbody2D>();
+        Collider2D ??= GetComponent<Collider2D>();
+        SpriteRenderer ??= GetComponent<SpriteRenderer>();
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision) { }

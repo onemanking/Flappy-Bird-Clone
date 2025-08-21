@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Bird
   m_EditorClassIdentifier: 
   <Speed>k__BackingField: 2
-  <JumpForce>k__BackingField: 9
+  <JumpForce>k__BackingField: 12
+  <GravityScale>k__BackingField: 5

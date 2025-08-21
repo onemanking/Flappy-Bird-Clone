@@ -32,7 +32,7 @@ public class GameManager : Singleton<GameManager>
 
     private void InitGameConfig()
     {
-        Physics2D.gravity = new Vector2(0, m_gameConfig.GravityScale);
+
     }
 
     private void InitEventBus()
