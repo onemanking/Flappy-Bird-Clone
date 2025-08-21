@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BottomOffset>k__BackingField: 1.5
   <MinTopPipeHeight>k__BackingField: 1
-  <MaxTopPipeHeight>k__BackingField: 10
+  <MaxTopPipeHeight>k__BackingField: 5
   <MinGap>k__BackingField: 2
   <MaxGap>k__BackingField: 4
