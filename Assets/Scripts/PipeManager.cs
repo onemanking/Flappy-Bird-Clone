@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class PipeManager : MonoBehaviour
 {
@@ -9,10 +10,13 @@ public class PipeManager : MonoBehaviour
     private float timer;
     private bool isActive;
 
-    private readonly List<PipeContainer> pipeContainers = new();
+    private readonly List<PipeContainer> activePipeContainers = new();
+    private IObjectPool<PipeContainer> pipePool;
 
     private void Start()
     {
+        pipePool = PoolManager.Instance.GetPool(m_pipeSpawnConfig.PipeContainerPrefab);
+
         EventBus.OnRestart += HandleGameRestart;
         EventBus.OnGameStart += HandleGameStart;
         EventBus.OnGameOver += HandleGameOver;
@@ -23,12 +27,12 @@ public class PipeManager : MonoBehaviour
         timer = 0f;
         isActive = false;
 
-        foreach (PipeContainer pc in pipeContainers)
+        foreach (var pc in activePipeContainers)
         {
-            Destroy(pc.gameObject);
+            pipePool.Release(pc);
         }
 
-        pipeContainers.Clear();
+        activePipeContainers.Clear();
     }
 
     private void HandleGameStart()
@@ -51,25 +55,25 @@ public class PipeManager : MonoBehaviour
         if (timer >= m_pipeSpawnConfig.SpawnInterval)
         {
             timer = 0f;
-            SpawnPipes(m_pipeSpawnConfig.PipeContainerPrefab);
+            SpawnPipes();
         }
 
-        for (int i = 0; i < pipeContainers.Count; i++)
+        for (int i = activePipeContainers.Count - 1; i >= 0; i--)
         {
-            var pc = pipeContainers[i];
+            var pc = activePipeContainers[i];
             if (Utils.IsReachedBoundaryX(pc.TopPipe.GetBounds().max.x, true))
             {
-                // TODO: IMPLEMENT POOLING SYSTEM
-                Destroy(pc.gameObject);
-                pipeContainers.Remove(pc);
+                activePipeContainers.RemoveAt(i);
+                pipePool.Release(pc);
             }
         }
     }
 
-    private void SpawnPipes(PipeContainer pipePrefab)
+    private void SpawnPipes()
     {
-        var pc = Instantiate(pipePrefab, transform.position, Quaternion.identity);
-        pipeContainers.Add(pc);
+        var pc = pipePool.Get();
+        pc.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
+        activePipeContainers.Add(pc);
     }
 
     private void OnDestroy()

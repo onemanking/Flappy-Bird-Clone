@@ -1,7 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class PipeContainer : MonoBehaviour
+public class PipeContainer : MonoBehaviour, IPool
 {
     [SerializeField] private PipeContainerConfig m_config;
     [SerializeField] private Pipe[] m_pipes;
@@ -9,11 +9,6 @@ public class PipeContainer : MonoBehaviour
 
     internal Pipe TopPipe => m_pipes.Length > 0 ? m_pipes[0] : null;
     internal Pipe BottomPipe => m_pipes.Length > 1 ? m_pipes[1] : null;
-
-    private void Start()
-    {
-        PositionPipes();
-    }
 
     private void Update()
     {
@@ -63,5 +58,14 @@ public class PipeContainer : MonoBehaviour
             TopPipe.gameObject.SetActive(false);
             BottomPipe.gameObject.SetActive(false);
         }
+    }
+
+    public void OnSpawn()
+    {
+        PositionPipes();
+    }
+
+    public void OnDespawn()
+    {
     }
 }
