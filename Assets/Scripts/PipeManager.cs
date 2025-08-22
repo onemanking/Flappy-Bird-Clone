@@ -71,4 +71,11 @@ public class PipeManager : MonoBehaviour
         var pc = Instantiate(pipePrefab, transform.position, Quaternion.identity);
         pipeContainers.Add(pc);
     }
+
+    private void OnDestroy()
+    {
+        EventBus.OnRestart -= HandleGameRestart;
+        EventBus.OnGameStart -= HandleGameStart;
+        EventBus.OnGameOver -= HandleGameOver;
+    }
 }
