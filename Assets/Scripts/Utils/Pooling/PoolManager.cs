@@ -1,78 +1,57 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class PoolManager
+public class PoolManager : Singleton<PoolManager>
 {
-    [SerializeField] private int maxPoolSize = 100;
-    [SerializeField] private bool collectionCheck = true;
+    [SerializeField] private PoolingConfig m_poolingConfig;
 
-    // private readonly Queue<IPool> poolQueue = new();
+    private readonly Dictionary<int, object> pools = new Dictionary<int, object>();
 
-    // internal void RegisterPool(IPool pool)
-    // {
-    //     if (pool == null)
-    //     {
-    //         Debug.LogError("Attempted to register a null pool.");
-    //         return;
-    //     }
+    public IObjectPool<T> GetPool<T>(T prefab) where T : MonoBehaviour, IPool
+    {
+        int instanceID = prefab.GetInstanceID();
 
-    //     poolQueue.Enqueue(pool);
-    // }
+        if (pools.TryGetValue(instanceID, out object existingPool))
+        {
+            return (IObjectPool<T>)existingPool;
+        }
 
-    // internal IPool GetPool()
-    // {
-    //     if (poolQueue.Count > 0)
-    //     {
-    //         return poolQueue.Dequeue();
-    //     }
+        IObjectPool<T> newPool = new ObjectPool<T>(
+            createFunc: () => CreatePooledItem(prefab),
+            actionOnGet: OnTakeFromPool,
+            actionOnRelease: OnReturnedToPool,
+            actionOnDestroy: OnDestroyPoolObject,
+            collectionCheck: m_poolingConfig.CollectionCheck,
+            defaultCapacity: m_poolingConfig.DefaultCapacity,
+            maxSize: m_poolingConfig.MaxPoolSize
+        );
 
-    //     Debug.LogWarning("No available pools.");
-    //     return null;
-    // }
+        pools[instanceID] = newPool;
+        return newPool;
+    }
 
-    // internal void ReturnPool(IPool pool)
-    // {
-    //     if (pool == null)
-    //     {
-    //         Debug.LogError("Attempted to return a null pool.");
-    //         return;
-    //     }
+    private T CreatePooledItem<T>(T prefab) where T : MonoBehaviour, IPool
+    {
+        T obj = Instantiate(prefab);
+        obj.gameObject.name = $"{prefab.name}_pooled";
+        return obj;
+    }
 
-    //     poolQueue.Enqueue(pool);
-    // }
-    // internal IObjectPool<IPool> Pool { get; private set; }
+    private void OnTakeFromPool<T>(T obj) where T : MonoBehaviour, IPool
+    {
+        obj.gameObject.SetActive(true);
+        obj.OnSpawn();
+    }
 
-    // protected override void Awake()
-    // {
-    //     base.Awake();
-    //     Initialize();
-    // }
+    private void OnReturnedToPool<T>(T obj) where T : MonoBehaviour, IPool
+    {
+        obj.gameObject.SetActive(false);
+        obj.OnDespawn();
+    }
 
-    // private void Initialize()
-    // {
-    //     Pool = new ObjectPool<IPool>(CreatePooledItem, OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, collectionCheck, 10, maxPoolSize);
-    // }
-
-    // private void OnDestroyPoolObject(IPool objectPool)
-    // {
-    //     Destroy(objectPool as MonoBehaviour.gameObject);
-    // }
-
-    // private void OnReturnedToPool(IPool objectPool)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    // private void OnTakeFromPool(IPool objectPool)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    // private IPool CreatePooledItem()
-    // {
-
-    // }
+    private void OnDestroyPoolObject<T>(T obj) where T : MonoBehaviour
+    {
+        Destroy(obj.gameObject);
+    }
 }
