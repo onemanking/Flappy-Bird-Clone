@@ -143,8 +143,6 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDestroy()
     {
-        GameUI.Instance.OnRestartButtonClicked -= HandleRestartButton;
-
         EventBus.OnPlayerInput -= HandlePlayInputAction;
         EventBus.OnPlayerOutOfBound -= HandlePlayerOutOfBound;
         EventBus.OnPlayerDied -= HandlePlayerDied;

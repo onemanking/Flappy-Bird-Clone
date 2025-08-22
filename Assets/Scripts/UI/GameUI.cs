@@ -61,6 +61,7 @@ public class GameUI : Singleton<GameUI>
 
     private void OnDestroy()
     {
+        OnRestartButtonClicked = null;
         EventBus.GameStateChanged -= HandleGameStateChanged;
     }
 }
