@@ -89,6 +89,8 @@ public abstract class BasePlayerObject : BaseObject
         if (Rb2D != null)
         {
             Rb2D.simulated = active;
+            Rb2D.linearVelocity = Vector2.zero;
+            Rb2D.angularVelocity = 0f;
         }
 
         if (Collider2D != null)
@@ -103,10 +105,10 @@ public abstract class BasePlayerObject : BaseObject
     {
         switch (gameState)
         {
-            case GameState.Waiting:
+            case GameState.Idle:
                 SetActive(false);
                 break;
-            case GameState.Playing:
+            case GameState.Starting:
                 SetActive(true);
                 break;
             case GameState.GameOver:

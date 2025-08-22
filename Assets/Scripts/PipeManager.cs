@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PipeManager : MonoBehaviour
@@ -7,10 +9,26 @@ public class PipeManager : MonoBehaviour
     private float timer;
     private bool isActive;
 
+    private readonly List<PipeContainer> pipeContainers = new();
+
     private void Start()
     {
+        EventBus.OnRestart += HandleGameRestart;
         EventBus.OnGameStart += HandleGameStart;
         EventBus.OnGameOver += HandleGameOver;
+    }
+
+    private void HandleGameRestart()
+    {
+        timer = 0f;
+        isActive = false;
+
+        foreach (PipeContainer pc in pipeContainers)
+        {
+            Destroy(pc.gameObject);
+        }
+
+        pipeContainers.Clear();
     }
 
     private void HandleGameStart()
@@ -35,10 +53,22 @@ public class PipeManager : MonoBehaviour
             timer = 0f;
             SpawnPipes(m_pipeSpawnConfig.PipeContainerPrefab);
         }
+
+        for (int i = 0; i < pipeContainers.Count; i++)
+        {
+            var pc = pipeContainers[i];
+            if (Utils.IsReachedBoundaryX(pc.TopPipe.GetBounds().max.x, true))
+            {
+                // TODO: IMPLEMENT POOLING SYSTEM
+                Destroy(pc.gameObject);
+                pipeContainers.Remove(pc);
+            }
+        }
     }
 
     private void SpawnPipes(PipeContainer pipePrefab)
     {
-        Instantiate(pipePrefab, transform.position, Quaternion.identity);
+        var pc = Instantiate(pipePrefab, transform.position, Quaternion.identity);
+        pipeContainers.Add(pc);
     }
 }

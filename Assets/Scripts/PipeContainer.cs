@@ -7,8 +7,8 @@ public class PipeContainer : MonoBehaviour
     [SerializeField] private Pipe[] m_pipes;
     [SerializeField] private Collider2D m_scoringZone;
 
-    private Pipe TopPipe => m_pipes.Length > 0 ? m_pipes[0] : null;
-    private Pipe BottomPipe => m_pipes.Length > 1 ? m_pipes[1] : null;
+    internal Pipe TopPipe => m_pipes.Length > 0 ? m_pipes[0] : null;
+    internal Pipe BottomPipe => m_pipes.Length > 1 ? m_pipes[1] : null;
 
     private void Start()
     {
@@ -23,12 +23,6 @@ public class PipeContainer : MonoBehaviour
             PositionPipes();
         }
 #endif
-
-        if (Utils.IsReachedBoundaryX(TopPipe.GetBounds().max.x, true))
-        {
-            // TODO: IMPLEMENT POOLING SYSTEM
-            Destroy(gameObject);
-        }
     }
 
     private void PositionPipes()
