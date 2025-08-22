@@ -100,7 +100,7 @@ public class GameManager : Singleton<GameManager>
 
     private int UpdateHighScore()
     {
-        const string highScoreKey = "HighScore";
+        var highScoreKey = Constants.HighScoreKey;
         int currentHighScore = PlayerPrefs.GetInt(highScoreKey, 0);
 
         if (score > currentHighScore)
