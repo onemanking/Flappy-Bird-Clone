@@ -93,6 +93,24 @@ public class GameManager : Singleton<GameManager>
     private void HandleGameOver()
     {
         EventBus.RaiseGameOver();
+
+        var newHighScore = UpdateHighScore();
+        GameUI.Instance.UpdateGameOverText(score, newHighScore);
+    }
+
+    private int UpdateHighScore()
+    {
+        const string highScoreKey = "HighScore";
+        int currentHighScore = PlayerPrefs.GetInt(highScoreKey, 0);
+
+        if (score > currentHighScore)
+        {
+            PlayerPrefs.SetInt(highScoreKey, score);
+            PlayerPrefs.Save();
+            return score;
+        }
+
+        return currentHighScore;
     }
 
     private void HandleRestartButton()

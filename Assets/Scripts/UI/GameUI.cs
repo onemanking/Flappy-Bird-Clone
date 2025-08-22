@@ -51,7 +51,12 @@ public class GameUI : Singleton<GameUI>
     internal void UpdateScoreText(int score)
     {
         m_scoreText.text = score.ToString();
+    }
+
+    internal void UpdateGameOverText(int score, int highScore)
+    {
         m_finalScoreText.text = score.ToString();
+        m_highScoreText.text = highScore.ToString();
     }
 
     private void OnDestroy()
