@@ -11,6 +11,13 @@ public class PlayerController : Singleton<PlayerController>
             EventBus.RaisePlayerInput();
             CurrentControlObject?.InputAction();
         }
+
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            CurrentControlObject?.ToggleTrigger();
+        }
+#endif
     }
 
     internal void SetupControlObject(BasePlayerObject baseObject)

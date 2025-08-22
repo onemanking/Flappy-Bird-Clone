@@ -117,4 +117,14 @@ public abstract class BasePlayerObject : BaseObject
         }
     }
     #endregion
+
+#if UNITY_EDITOR
+    internal void ToggleTrigger()
+    {
+        if (Collider2D != null)
+        {
+            Collider2D.isTrigger = !Collider2D.isTrigger;
+        }
+    }
+#endif
 }
