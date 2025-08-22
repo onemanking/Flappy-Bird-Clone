@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class GameUI : Singleton<GameUI>
 {
+    [Header("Idle")]
+    [SerializeField] private Image m_idlePanel;
+
     [Header("In-game")]
     [SerializeField] private Image m_inGamePanel;
     [SerializeField] private TextMeshProUGUI m_scoreText;
@@ -32,14 +35,17 @@ public class GameUI : Singleton<GameUI>
         switch (state)
         {
             case GameState.Idle:
+                m_idlePanel.gameObject.SetActive(true);
                 m_inGamePanel.gameObject.SetActive(false);
                 m_gameOverPanel.gameObject.SetActive(false);
                 break;
             case GameState.Starting:
+                m_idlePanel.gameObject.SetActive(false);
                 m_inGamePanel.gameObject.SetActive(true);
                 m_gameOverPanel.gameObject.SetActive(false);
                 break;
             case GameState.GameOver:
+                m_idlePanel.gameObject.SetActive(false);
                 m_inGamePanel.gameObject.SetActive(false);
                 m_gameOverPanel.gameObject.SetActive(true);
                 break;
