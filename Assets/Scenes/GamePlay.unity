@@ -1758,7 +1758,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerObjectPrefab: {fileID: 717397405889248747, guid: 01ee501c76c4f214fb7ade341a97be5b, type: 3}
-  m_gameConfig: {fileID: 11400000, guid: ac3010812c731b747b1da62a70e98c00, type: 2}
 --- !u!4 &1860865118
 Transform:
   m_ObjectHideFlags: 0
@@ -2159,6 +2158,10 @@ PrefabInstance:
     - target: {fileID: 2430009999552745272, guid: e92a2001fde9481489daae207e430a68, type: 3}
       propertyPath: m_Name
       value: GroundContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430009999552745272, guid: e92a2001fde9481489daae207e430a68, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5756420538503346388, guid: e92a2001fde9481489daae207e430a68, type: 3}
       propertyPath: m_LocalPosition.x

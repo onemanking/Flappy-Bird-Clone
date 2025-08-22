@@ -7,9 +7,6 @@ public class GameManager : Singleton<GameManager>
     [Header("Player Prefab")]
     [SerializeField] private BasePlayerObject m_playerObjectPrefab;
 
-    [Header("Game Configs")]
-    [SerializeField] private GameConfig m_gameConfig;
-
     private int score = 0;
 
     void Awake()
@@ -19,7 +16,6 @@ public class GameManager : Singleton<GameManager>
 
     private void Initialize()
     {
-        InitGameConfig();
         InitEventBus();
 
         var playerObject = Instantiate(m_playerObjectPrefab, Vector3.zero, Quaternion.identity);
@@ -33,11 +29,6 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         UpdateGameState(GameState.Idle);
-    }
-
-    private void InitGameConfig()
-    {
-
     }
 
     private void InitEventBus()
