@@ -1,5 +1,3 @@
-using System;
-using TMPro;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -12,15 +10,10 @@ public class GameManager : Singleton<GameManager>
     [Header("Game Configs")]
     [SerializeField] private GameConfig m_gameConfig;
 
-    //TODO: MOVE IT TO OWN SCRIPT
-    [Header("Game UI")]
-    [SerializeField] private TextMeshProUGUI m_scoreText;
-
     private int score = 0;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
         Initialize();
     }
 
@@ -34,7 +27,11 @@ public class GameManager : Singleton<GameManager>
 
         CameraController.Instance.SetTarget(playerObject.transform);
         PlayerController.Instance.SetupControlObject(playerObject);
+        GameUI.Instance.OnRestartButtonClicked += HandleRestartButton;
+    }
 
+    private void Start()
+    {
         UpdateGameState(GameState.Idle);
     }
 
@@ -50,34 +47,32 @@ public class GameManager : Singleton<GameManager>
         EventBus.OnPlayerDied += HandlePlayerDied;
         EventBus.OnScoreChanged += HandleScoreChanged;
 
-        void HandlePlayInputAction()
-        {
-            switch (CurrentGameState)
-            {
-                case GameState.Idle:
-                    UpdateGameState(GameState.Starting);
-                    break;
-                case GameState.GameOver:
-                    UpdateGameState(GameState.Idle);
-                    break;
-            }
-        }
+    }
 
-        void HandlePlayerOutOfBound()
+    private void HandlePlayInputAction()
+    {
+        switch (CurrentGameState)
         {
-            UpdateGameState(GameState.GameOver);
+            case GameState.Idle:
+                UpdateGameState(GameState.Starting);
+                break;
         }
+    }
 
-        void HandlePlayerDied()
-        {
-            UpdateGameState(GameState.GameOver);
-        }
+    private void HandlePlayerOutOfBound()
+    {
+        UpdateGameState(GameState.GameOver);
+    }
 
-        void HandleScoreChanged(int value)
-        {
-            score += value;
-            UpdateScoreText(score);
-        }
+    private void HandlePlayerDied()
+    {
+        UpdateGameState(GameState.GameOver);
+    }
+
+    private void HandleScoreChanged(int value)
+    {
+        score += value;
+        UpdateScoreText(score);
     }
 
     private void HandleIdle()
@@ -100,10 +95,14 @@ public class GameManager : Singleton<GameManager>
         EventBus.RaiseGameOver();
     }
 
-    //TODO: MOVE TO OWN UI SCRIPT
+    private void HandleRestartButton()
+    {
+        UpdateGameState(GameState.Idle);
+    }
+
     private void UpdateScoreText(int score)
     {
-        m_scoreText.text = score.ToString();
+        GameUI.Instance.UpdateScoreText(score);
     }
 
     private void UpdateGameState(GameState newState)
@@ -122,5 +121,15 @@ public class GameManager : Singleton<GameManager>
                 HandleGameOver();
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameUI.Instance.OnRestartButtonClicked -= HandleRestartButton;
+
+        EventBus.OnPlayerInput -= HandlePlayInputAction;
+        EventBus.OnPlayerOutOfBound -= HandlePlayerOutOfBound;
+        EventBus.OnPlayerDied -= HandlePlayerDied;
+        EventBus.OnScoreChanged -= HandleScoreChanged;
     }
 }
